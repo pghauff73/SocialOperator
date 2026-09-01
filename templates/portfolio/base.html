@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ description | default('Verified public portfolio generated from approved SocialOperator data.') }}">
+    <meta property="og:title" content="{{ page_title | default('Portfolio') }}">
+    <meta property="og:type" content="website">
+    <title>{% block title %}Portfolio{% endblock %}</title>
+    {% block structured_data %}{% endblock %}
+    <style>
+      :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+      body { margin: 0 auto; max-width: 70rem; padding: 2rem; line-height: 1.6; }
+      nav ul { display: flex; flex-wrap: wrap; gap: 0.75rem; list-style: none; padding: 0; }
+      nav a { color: inherit; }
+      .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+      .sections { display: grid; gap: 1.5rem; }
+      article { border: 1px solid color-mix(in srgb, currentColor 25%, transparent); border-radius: 0.75rem; padding: 1.25rem; }
+      .meta { opacity: 0.72; font-size: 0.9rem; }
+      .asset-list { display: grid; gap: 1rem; margin-top: 1rem; }
+      .asset-list img { border: 1px solid color-mix(in srgb, currentColor 20%, transparent); max-width: min(100%, 42rem); height: auto; }
+    </style>
+  </head>
+  <body>
+    <nav aria-label="Portfolio sections">
+      <ul>
+        <li><a href="/">Portfolio</a></li>
+        {% for nav_section in section_nav | default([]) %}
+          <li><a href="/{{ nav_section.slug }}">{{ nav_section.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+    <main>{% block content %}{% endblock %}</main>
+    <footer class="meta">Publication version {{ publication.version_number }}</footer>
+  </body>
+</html>

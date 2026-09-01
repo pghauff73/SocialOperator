@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SocialOperator Fixture</title>
+    <style>
+      body { font: 18px/1.5 sans-serif; margin: 3rem; max-width: 60rem; }
+      button, a { font: inherit; padding: 0.6rem 1rem; }
+      dialog { border: 2px solid #222; border-radius: 0.5rem; padding: 2rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>SocialOperator Synthetic Profile</h1>
+      <p id="profile-summary">This fixture contains synthetic user-owned portfolio data.</p>
+      <a href="project.html">Read the synthetic project</a>
+      <button id="open-details" type="button">Open project details</button>
+      <dialog id="details-dialog" aria-labelledby="details-title">
+        <h2 id="details-title">Synthetic project details</h2>
+        <p>The modal opened successfully.</p>
+        <button id="close-details" type="button">Close details</button>
+      </dialog>
+    </main>
+    <script>
+      const dialog = document.querySelector("#details-dialog");
+      document.querySelector("#open-details").addEventListener("click", () => dialog.showModal());
+      document.querySelector("#close-details").addEventListener("click", () => dialog.close());
+    </script>
+  </body>
+</html>

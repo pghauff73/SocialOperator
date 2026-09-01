@@ -1,0 +1,41 @@
+[project]
+name = "SocialOperator"
+environment = "development"
+
+[paths]
+private_data_dir = "data/private"
+public_data_dir = "data/public"
+runtime_dir = "data/runtime"
+artifact_dir = "data/private/artifacts"
+database_path = "data/private/socialoperator.sqlite"
+browser_profile_dir = "data/private/browser-profile"
+reports_dir = "reports"
+
+[browser]
+headless = false
+browser_name = "chromium"
+channel = ""
+default_viewport_width = 1440
+default_viewport_height = 1000
+action_timeout_seconds = 10.0
+maximum_read_only_retries = 2
+
+[capture]
+pointer_crop_size = 400
+full_viewport_ocr_timeout_seconds = 3.0
+pointer_ocr_timeout_seconds = 0.5
+capture_authentication = false
+redact_operator_windows = true
+
+[security]
+allow_real_site_capture = false
+allow_external_side_effects = false
+require_application_encryption_for_real_data = true
+private_directory_mode = "0700"
+private_file_mode = "0600"
+
+[limits]
+maximum_pages_per_session = 25
+maximum_actions_per_session = 100
+maximum_session_minutes = 30
+maximum_capture_bytes = 268435456

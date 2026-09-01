@@ -1,0 +1,7 @@
+site_id = "example_real_site"
+domains = ["profile.example.com"]
+allowed_path_prefixes = ["/user/example-user"]
+account_identifiers = ["example-user"]
+allowed_actions = ["A0", "A1"]
+maximum_requests_per_minute = 30
+real_site = true

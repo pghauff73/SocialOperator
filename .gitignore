@@ -1,0 +1,31 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Private and generated runtime state.
+data/private/
+data/public/
+data/runtime/
+data/artifacts/
+reports/
+
+# Browser authentication and session state must never be committed.
+browser-profile/
+storage-state*.json
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Local configuration overrides and secrets.
+.env
+.env.*
+config/local.toml
+config/secrets.toml

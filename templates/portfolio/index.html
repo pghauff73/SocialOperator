@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Profile Portfolio{% endblock %}
+{% block structured_data %}
+  <script type="application/ld+json">{{ structured_data | safe }}</script>
+{% endblock %}
+{% block content %}
+  <h1>Profile Portfolio</h1>
+  {% if items %}
+    <section class="sections" aria-label="Portfolio sections">
+      {% for section in sections %}
+        {% if section.entries %}
+          <section aria-labelledby="section-{{ section.slug }}">
+            <h2 id="section-{{ section.slug }}"><a href="/{{ section.slug }}">{{ section.label }}</a></h2>
+            <p class="meta">{{ section.description }}</p>
+            <div class="grid">
+              {% for item in section.entries %}
+                <article>
+                  <p class="meta">{{ item.item_type }}</p>
+                  <h3><a href="/items/{{ item.slug }}">{{ item.title }}</a></h3>
+                  <p>{{ item.summary }}</p>
+                </article>
+              {% endfor %}
+            </div>
+          </section>
+        {% endif %}
+      {% endfor %}
+    </section>
+  {% else %}
+    <p>No approved public portfolio items are available.</p>
+  {% endif %}
+{% endblock %}

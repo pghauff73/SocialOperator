@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ item.title }}{% endblock %}
+{% block structured_data %}
+  <script type="application/ld+json">{{ structured_data | safe }}</script>
+{% endblock %}
+{% block content %}
+  <article>
+    <p class="meta"><a href="/{{ section.slug }}">{{ section.label }}</a> · {{ item.item_type }}</p>
+    <h1>{{ item.title }}</h1>
+    <p><strong>{{ item.summary }}</strong></p>
+    <div>{{ item.body | e | replace('\n', '<br>') | safe }}</div>
+    {% if assets %}
+      <section class="asset-list" aria-label="Approved public assets">
+        <h2>Assets</h2>
+        {% for asset in assets %}
+          {% if asset.media_type.startswith('image/') %}
+            <img src="/{{ asset.public_relative_path }}" alt="{{ asset.source_label }}">
+          {% else %}
+            <p><a href="/{{ asset.public_relative_path }}">{{ asset.source_label }}</a></p>
+          {% endif %}
+        {% endfor %}
+      </section>
+    {% endif %}
+    <p class="meta">Last verified {{ item.updated_at }}</p>
+  </article>
+{% endblock %}

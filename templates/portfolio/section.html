@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ section.label }}{% endblock %}
+{% block structured_data %}
+  <script type="application/ld+json">{{ structured_data | safe }}</script>
+{% endblock %}
+{% block content %}
+  <h1>{{ section.label }}</h1>
+  <p>{{ section.description }}</p>
+  {% if items %}
+    <section class="grid" aria-label="{{ section.label }} items">
+      {% for item in items %}
+        <article>
+          <p class="meta">{{ item.item_type }}</p>
+          <h2><a href="/items/{{ item.slug }}">{{ item.title }}</a></h2>
+          <p>{{ item.summary }}</p>
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <p>No approved public {{ section.label | lower }} items are available.</p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "socialoperator"
+version = "0.1.0"
+description = "Supervised OCR browser operator with provenance-aware SQLite knowledge storage"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { text = "Proprietary" }
+authors = [{ name = "SocialOperator User" }]
+dependencies = [
+  "fastapi>=0.116,<1",
+  "jinja2>=3.1,<4",
+  "mss>=10,<11",
+  "pillow>=12,<13",
+  "playwright>=1.55,<2",
+  "pydantic>=2.11,<3",
+  "pyautogui>=0.9.54,<1",
+  "python-multipart>=0.0.20,<1",
+  "pytesseract>=0.3.13,<1",
+  "uvicorn>=0.35,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "httpx>=0.28,<1",
+  "mypy>=1.17,<2",
+  "pytest>=8.4,<9",
+  "pytest-cov>=6.2,<8",
+  "ruff>=0.12,<1",
+]
+
+[project.scripts]
+socialoperator = "socialoperator.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/socialoperator"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"templates/portfolio" = "socialoperator/portfolio/templates"
+"templates/review" = "socialoperator/review/templates"
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["socialoperator"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+packages = ["socialoperator"]
+
+[[tool.mypy.overrides]]
+module = ["pyautogui", "pytesseract", "pytesseract.*"]
+ignore_missing_imports = true

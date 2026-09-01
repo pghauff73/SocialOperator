@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Observer Context Fixture</title>
+    <style>
+      body { font: 18px/1.5 sans-serif; margin: 2rem; }
+      iframe { width: 36rem; height: 12rem; display: block; margin: 1rem 0; }
+      .offscreen { position: absolute; top: 3000px; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Observer context fixture</h1>
+      <button type="button">Main action</button>
+      <button type="button" hidden>Hidden action</button>
+      <button type="button" disabled>Disabled action</button>
+      <button type="button" class="offscreen">Offscreen action</button>
+      <section id="shadow-host" aria-label="portfolio-shadow"></section>
+      <iframe name="same-origin-project" src="frame-content.html"></iframe>
+      <iframe name="cross-origin-boundary" src="data:text/html,%3Ch1%3ECross-origin%3C/h1%3E%3Cbutton%3EUntrusted%3C/button%3E"></iframe>
+    </main>
+    <script>
+      const root = document.querySelector("#shadow-host").attachShadow({mode: "open"});
+      root.innerHTML = `<h2>Shadow portfolio</h2><button type="button">Shadow action</button>`;
+    </script>
+  </body>
+</html>

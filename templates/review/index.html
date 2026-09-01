@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SocialOperator Review</title>
+    <style>
+      :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+      body { margin: 0 auto; max-width: 90rem; padding: 2rem; line-height: 1.5; }
+      article { border: 1px solid color-mix(in srgb, currentColor 25%, transparent); border-radius: 0.75rem; margin: 1rem 0; padding: 1.25rem; }
+      .columns { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+      pre { max-height: 20rem; overflow: auto; white-space: pre-wrap; }
+      form { display: grid; gap: 0.5rem; margin-top: 1rem; }
+      .actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+      .meta { font-size: 0.9rem; opacity: 0.75; overflow-wrap: anywhere; }
+      @media (max-width: 55rem) { .columns { grid-template-columns: 1fr; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Portfolio Review</h1>
+      <p>Every decision is bound to the exact proposal hash shown with its source evidence.</p>
+      {% if contradictions %}
+        <section aria-label="Claim contradictions">
+          <h2>Claim Contradictions</h2>
+          <p>Resolve contradictory claims before publication. Supersession unpublishes affected portfolio items for renewed review.</p>
+          {% for contradiction in contradictions %}
+            <article>
+              <h3>{{ contradiction.subject_name or contradiction.subject_entity_id }} · {{ contradiction.predicate }}</h3>
+              <div class="columns">
+                <section aria-label="First conflicting claim">
+                  <h4>First Claim</h4>
+                  <p class="meta">{{ contradiction.first.claim_sha256 }}</p>
+                  <pre>{{ contradiction.first.object_text }}</pre>
+                  <form method="post" action="/claims/{{ contradiction.first.claim_id }}/supersede">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="replacement_claim_id" value="{{ contradiction.second.claim_id }}">
+                    <input type="hidden" name="claim_sha256" value="{{ contradiction.first.claim_sha256 }}">
+                    <label>Reviewer <input name="reviewer_identity" required></label>
+                    <label>Reason <input name="reason" required></label>
+                    <button type="submit">Supersede first with second</button>
+                  </form>
+                </section>
+                <section aria-label="Second conflicting claim">
+                  <h4>Second Claim</h4>
+                  <p class="meta">{{ contradiction.second.claim_sha256 }}</p>
+                  <pre>{{ contradiction.second.object_text }}</pre>
+                  <form method="post" action="/claims/{{ contradiction.second.claim_id }}/supersede">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="replacement_claim_id" value="{{ contradiction.first.claim_id }}">
+                    <input type="hidden" name="claim_sha256" value="{{ contradiction.second.claim_sha256 }}">
+                    <label>Reviewer <input name="reviewer_identity" required></label>
+                    <label>Reason <input name="reason" required></label>
+                    <button type="submit">Supersede second with first</button>
+                  </form>
+                </section>
+              </div>
+            </article>
+          {% endfor %}
+        </section>
+      {% endif %}
+      {% if proposals %}
+        {% for proposal in proposals %}
+          <article>
+            <h2>{{ proposal.title }}</h2>
+            <p class="meta">{{ proposal.proposal_sha256 }}</p>
+            <div class="columns">
+              <section aria-label="Portfolio proposal">
+                <h3>Proposal</h3>
+                <p><strong>{{ proposal.summary }}</strong></p>
+                <pre>{{ proposal.body }}</pre>
+              </section>
+              <section aria-label="Source evidence">
+                <h3>Evidence</h3>
+                {% for evidence in proposal.evidence %}
+                  <div>
+                    <p><a href="{{ evidence.url }}">{{ evidence.source_title }}</a></p>
+                    <p class="meta">{{ evidence.observation_kind }} · {{ evidence.content_sha256 }}</p>
+                    <pre>{{ evidence.raw_text }}</pre>
+                  </div>
+                {% else %}
+                  <p>No evidence is linked. This item cannot be safely approved.</p>
+                {% endfor %}
+              </section>
+            </div>
+            <div class="actions">
+              <form method="post" action="/items/{{ proposal.portfolio_item_id }}/approve">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="proposal_sha256" value="{{ proposal.proposal_sha256 }}">
+                <label>Reviewer <input name="reviewer_identity" required></label>
+                <label>Approval reason <input name="reason"></label>
+                <button type="submit">Approve exact proposal</button>
+              </form>
+              <form method="post" action="/items/{{ proposal.portfolio_item_id }}/reject">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="proposal_sha256" value="{{ proposal.proposal_sha256 }}">
+                <label>Reviewer <input name="reviewer_identity" required></label>
+                <label>Rejection reason <input name="reason" required></label>
+                <button type="submit">Reject proposal</button>
+              </form>
+              <details>
+                <summary>Redact and resubmit</summary>
+                <form method="post" action="/items/{{ proposal.portfolio_item_id }}/redact">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                  <input type="hidden" name="proposal_sha256" value="{{ proposal.proposal_sha256 }}">
+                  <label>Title <input name="title" value="{{ proposal.title }}" required></label>
+                  <label>Summary <textarea name="summary" required>{{ proposal.summary }}</textarea></label>
+                  <label>Body <textarea name="body" rows="10" required>{{ proposal.body }}</textarea></label>
+                  <label>Reviewer <input name="reviewer_identity" required></label>
+                  <label>Redaction reason <input name="reason" required></label>
+                  <button type="submit">Record redaction and create new proposal hash</button>
+                </form>
+              </details>
+            </div>
+          </article>
+        {% endfor %}
+      {% else %}
+        <p>No proposals are awaiting review.</p>
+      {% endif %}
+    </main>
+  </body>
+</html>

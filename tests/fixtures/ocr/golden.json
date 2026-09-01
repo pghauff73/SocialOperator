@@ -1,0 +1,18 @@
+{
+  "cases": [
+    {
+      "case_id": "profile-heading",
+      "render_text": "SocialOperator Synthetic Profile\nOpen project details",
+      "expected_terms": ["SocialOperator", "Synthetic", "Profile", "Open", "project", "details"],
+      "minimum_term_recall": 1.0,
+      "minimum_mean_confidence": 70.0
+    },
+    {
+      "case_id": "ownership-sentence",
+      "render_text": "This synthetic profile is owned by synthetic-user.",
+      "expected_terms": ["synthetic", "profile", "owned", "synthetic", "user"],
+      "minimum_term_recall": 0.8,
+      "minimum_mean_confidence": 70.0
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+site_id = "local_fixture"
+domains = ["127.0.0.1", "localhost"]
+allowed_path_prefixes = ["/"]
+account_identifiers = ["synthetic-user"]
+allowed_actions = ["A0", "A1"]
+maximum_requests_per_minute = 120
+real_site = false
