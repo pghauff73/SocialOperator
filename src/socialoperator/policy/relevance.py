@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass
 
 from socialoperator.config import SitePolicy
+from socialoperator.text import normalize_search_text
 from socialoperator.types import OwnershipClass, Sensitivity
 
 
@@ -15,10 +15,6 @@ class ScopeDecision:
     eligible_for_portfolio_review: bool
     confidence: float
     reasons: tuple[str, ...]
-
-
-def _normalize(value: str) -> str:
-    return " ".join(re.findall(r"[a-z0-9]+", value.lower()))
 
 
 class ScopeClassifier:
@@ -36,7 +32,7 @@ class ScopeClassifier:
     )
 
     def classify(self, text: str, policy: SitePolicy) -> ScopeDecision:
-        normalized = _normalize(text)
+        normalized = normalize_search_text(text)
         if any(phrase in normalized for phrase in self.EXCLUSION_PHRASES):
             return ScopeDecision(
                 ownership_class=OwnershipClass.EXCLUDED,
@@ -58,7 +54,7 @@ class ScopeClassifier:
         matched_identifiers = tuple(
             identifier
             for identifier in policy.account_identifiers
-            if _normalize(identifier) and _normalize(identifier) in normalized
+            if normalize_search_text(identifier) and normalize_search_text(identifier) in normalized
         )
         if matched_identifiers and "created by" in normalized:
             return ScopeDecision(

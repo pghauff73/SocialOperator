@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass
 
 from socialoperator.browser.models import InteractiveTarget
+from socialoperator.text import normalize_search_text
 
 
 class TargetSelectionError(RuntimeError):
@@ -25,24 +25,20 @@ class TargetCandidate:
     reasons: tuple[str, ...]
 
 
-def _normalize(value: str) -> str:
-    return " ".join(re.findall(r"[a-z0-9]+", value.lower()))
-
-
 def rank_targets(
     query: str,
     targets: tuple[InteractiveTarget, ...],
     *,
     ocr_text: str = "",
 ) -> tuple[TargetCandidate, ...]:
-    normalized_query = _normalize(query)
+    normalized_query = normalize_search_text(query)
     query_tokens = set(normalized_query.split())
-    normalized_ocr = _normalize(ocr_text)
+    normalized_ocr = normalize_search_text(ocr_text)
     candidates: list[TargetCandidate] = []
     for target in targets:
         if not target.visible or not target.enabled:
             continue
-        name = _normalize(target.accessible_name or target.text)
+        name = normalize_search_text(target.accessible_name or target.text)
         name_tokens = set(name.split())
         reasons: list[str] = []
         score = 0.0
